@@ -1,22 +1,40 @@
 package org.geektimes.projects.user.domain;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
+
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.util.Objects;
+
+import static javax.persistence.GenerationType.AUTO;
 
 /**
  * 用户领域对象
  *
  * @since 1.0
  */
-public class User {
+@Entity
+@Table(name = "users")
+public class User implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = AUTO)
     private Long id;
 
+    @Column
     private String name;
 
+    @Column
+    @Length(min = 6, max = 32, message = "密码长度必须为6-32位")
     private String password;
 
+    @Column
     private String email;
 
+    @Column
+    @Pattern(regexp = "^1(3|4|5|7|8)\\d{9}$", message = "手机号码格式错误")
     private String phoneNumber;
 
     public Long getId() {

@@ -1,5 +1,7 @@
 package org.geektimes.web.mvc.controller;
 
+import org.geektimes.controller.Controller;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 

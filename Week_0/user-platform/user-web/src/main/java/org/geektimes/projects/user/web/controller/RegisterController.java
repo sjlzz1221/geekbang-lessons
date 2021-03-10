@@ -5,6 +5,7 @@ import org.geektimes.projects.user.service.DefaultUserService;
 import org.geektimes.projects.user.service.UserService;
 import org.geektimes.web.mvc.controller.PageController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -19,11 +20,8 @@ import java.util.UUID;
 @Path("/register")
 public class RegisterController implements PageController {
 
+    @Resource(name = "bean/UserService")
     private UserService userService;
-
-    public RegisterController() {
-        userService = new DefaultUserService();
-    }
 
     @POST
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Throwable {

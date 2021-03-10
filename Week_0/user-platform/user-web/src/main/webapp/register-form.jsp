@@ -22,6 +22,7 @@
 	<div class="container">
 		<form action="/register" method="post" class="form-signin">
 			<h1 class="h3 mb-3 font-weight-normal">注册</h1>
+
 			<label for="inputName" class="sr-only">用户名</label>
 			<input
 					type="text" name="inputName" id="inputName" class="form-control"

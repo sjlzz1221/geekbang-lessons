@@ -2,20 +2,49 @@ package org.geektimes.projects.user.sql;
 
 import org.geektimes.projects.user.domain.User;
 
+import javax.annotation.Resource;
+import javax.persistence.EntityManager;
+import javax.sql.DataSource;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
-import java.util.ServiceLoader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DBConnectionManager {
 
-    private Connection connection;
+    private final Logger logger = Logger.getLogger(DBConnectionManager.class.getName());
+
+    @Resource(name = "jdbc/UserPlatformDB")
+    private DataSource dataSource;
+
+    @Resource(name = "bean/EntityManager")
+    private EntityManager entityManager;
+
+    public EntityManager getEntityManager() {
+        logger.info("当前 EntityManager 实现类：" + entityManager.getClass().getName());
+        return entityManager;
+    }
+
+    public Connection getConnection() {
+        // 依赖查找
+        Connection connection = null;
+        try {
+            connection = dataSource.getConnection();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, e.getMessage());
+        }
+        if (connection != null) {
+            logger.log(Level.INFO, "获取 JNDI 数据库连接成功！");
+        }
+        return connection;
+    }
+
+/*    private Connection connection;
 
     public void setConnection(Connection connection) {
         this.connection = connection;
@@ -23,10 +52,10 @@ public class DBConnectionManager {
 
     public Connection getConnection() {
         return this.connection;
-    }
+    }*/
 
     private static final String databaseURL = "jdbc:derby:/db/user-platform;create=true";
-
+/*
     public void releaseConnection() {
         if (this.connection != null) {
             try {
@@ -35,9 +64,9 @@ public class DBConnectionManager {
                 throw new RuntimeException(e.getCause());
             }
         }
-    }
+    }*/
 
-    public DBConnectionManager() {
+/*    public DBConnectionManager() {
         ServiceLoader<Driver> drivers = ServiceLoader.load(Driver.class);
         drivers.iterator().next();
         try {
@@ -45,7 +74,7 @@ public class DBConnectionManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     public static final String DROP_USERS_TABLE_DDL_SQL = "DROP TABLE users";
 
