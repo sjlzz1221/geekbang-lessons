@@ -1,0 +1,2 @@
+org.geektimes.config.converter.StringToIntConverter
+org.geektimes.config.converter.StringToLongConverter
