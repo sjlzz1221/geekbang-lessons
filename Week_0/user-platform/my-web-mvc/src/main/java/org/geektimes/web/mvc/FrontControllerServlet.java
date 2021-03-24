@@ -1,7 +1,8 @@
 package org.geektimes.web.mvc;
 
 import org.apache.commons.lang.StringUtils;
-import org.geektimes.context.ComponentContext;
+import org.eclipse.microprofile.config.Config;
+import org.geektimes.context.ClassicComponentContext;
 import org.geektimes.controller.Controller;
 import org.geektimes.web.mvc.controller.PageController;
 import org.geektimes.web.mvc.controller.RestController;
@@ -22,6 +23,7 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang.StringUtils.substringAfter;
+import static org.geektimes.configuration.microprofile.config.source.servlet.ServletContextConfigInitializer.CONFIG_NAME;
 
 public class FrontControllerServlet extends HttpServlet {
 
@@ -41,6 +43,15 @@ public class FrontControllerServlet extends HttpServlet {
      * @param servletConfig
      */
     public void init(ServletConfig servletConfig) {
+        Config config = (Config) servletConfig.getServletContext().getAttribute(CONFIG_NAME);
+        Iterable<String> propertyNames = config.getPropertyNames();
+        config.getConfigSources().forEach(configSource -> {
+            propertyNames.forEach(propertyName -> {
+                System.out.printf("配置数据：key: %s, value: %s  \n", propertyName, configSource.getValue(propertyName));
+            });
+
+        });
+
         initHandleMethods();
     }
 
@@ -49,7 +60,7 @@ public class FrontControllerServlet extends HttpServlet {
      * 利用 ServiceLoader 技术（Java SPI）
      */
     private void initHandleMethods() {
-        for (Controller controller : ComponentContext.getInstance().getControllers()) {
+        for (Controller controller : ClassicComponentContext.getInstance().getControllers()) {
             Class<?> controllerClass = controller.getClass();
             Path pathFromClass = controllerClass.getAnnotation(Path.class);
             String requestPath = pathFromClass.value();
